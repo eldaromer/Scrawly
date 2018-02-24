@@ -1,4 +1,4 @@
-#import HTMLParser
+import HTMLParser
 
 class Scrawler:
 	def __init__(self, url):
@@ -41,15 +41,18 @@ class Scrawler:
 
 		# Initiate request to HTMLParser for original url and get parsed/preprocessed object back
 
-		#this.currentPage = HTMLParser.get(this.rootUrl)
+		self.html = HTMLParser.getHTMLObject(self.rootUrl)
 
-		# Display the preprocessed html to the user
+		nodes = []
 
-		# Capture any input from the webpage and add to the command chain
+		for x in range(len(self.commandChain)):
+			nodes.append(self.htmlSearch(self.html, self.processHier(self.commandChain[x][1])))
 
-		# Wait for done command
+		print (len(nodes[0]))
+		#for nodeList in nodes:
+		#	for node in nodeList:
+		#]		print(node.text)
 
-		# Pass command chaining to IterativeProcessor
 
 	def addToChain(self, func, hier):
 		self.commandChain.append([func, hier])
@@ -57,3 +60,31 @@ class Scrawler:
 	def printChain(self):
 		for x in range(len(self.commandChain)):
 			print ("func: " + self.commandChain[x][0] + " | arg: " + self.commandChain[x][1])
+
+	def processHier(self, hier):
+		return hier.split('/')
+
+	def htmlSearch(self, html, hier):
+
+		path = []
+
+		for element in html.html.children:
+			if element.name == hier[0]:
+				path.append(element)
+
+
+		x = 1
+		while path != [] and x < len(hier):
+			newPath = []
+
+			for thing in path:
+				for element in thing.children:
+					if element.name == hier[x]:
+						newPath.append(element)
+
+			path = newPath
+			x = x+1
+
+		return path
+
+		
