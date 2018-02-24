@@ -48,10 +48,9 @@ class Scrawler:
 		for x in range(len(self.commandChain)):
 			nodes.append(self.htmlSearch(self.html, self.processHier(self.commandChain[x][1])))
 
-		print (len(nodes[0]))
-		#for nodeList in nodes:
-		#	for node in nodeList:
-		#]		print(node.text)
+		for nodeList in nodes:
+			for node in nodeList:
+				print(node.string)
 
 
 	def addToChain(self, func, hier):
