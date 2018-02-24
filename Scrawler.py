@@ -58,5 +58,3 @@ class Scrawler:
 	def printChain(self):
 		for x in range(len(self.commandChain)):
 			print ("func: " + self.commandChain[x][0] + " | arg: " + self.commandChain[x][1])
-
-		
