@@ -1,3 +1,5 @@
+from urllib.parse import urlparse
+
 def executeChain(chain, html):
     nodes = []
 
@@ -8,6 +10,33 @@ def executeChain(chain, html):
 
 def processHier(hier):
     return hier.split('/')
+
+#Check whether a url is absolute or not
+def isAbsolute(url):
+    return bool(urlparse(url).netloc)
+
+def constructLink(currentUrl, nextUrl):
+    #Verify the format of the next URL
+    if isAbsolute(nextUrl):
+        #URL is absolute and doesn't need reconstruction
+        return nextUrl
+    else:
+        #URL is not absolute, reconstruct it from the relative url and the domain
+        #Start by getting the domain from the old URL
+        parsed_old_uri = urlparse(currentUrl)
+        domain = '{uri.scheme}://{uri.netloc}'.format(uri=parsed_old_uri)
+        
+        #Check for a single ../
+        if nextUrl[:3] == '../':
+
+            return currentUrl + '/' + nextUrl
+        else:
+            if nextUrl[0] == '/':
+                return domain + nextUrl
+            else:
+                return domain + '/' + nextUrl
+
+
 
 def htmlSearch(html, hier):
     path = []
