@@ -45,7 +45,7 @@ class Scrawler:
 		self.html = HTMLObjectify.getHTMLObject(self.rootUrl)
 
 
-		nodes = ScrawlyUtil.executeChain(self.commandChain)
+		nodes = ScrawlyUtil.executeChain(self.commandChain, self.rootUrl)
 
 		for nodeList in nodes:
 			for node in nodeList:
