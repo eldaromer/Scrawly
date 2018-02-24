@@ -1,4 +1,5 @@
-import HTMLParser
+import HTMLObjectify
+import ScrawlyUtil
 
 class Scrawler:
 	def __init__(self, url):
@@ -39,18 +40,16 @@ class Scrawler:
 
 		self.printChain()
 
-		# Initiate request to HTMLParser for original url and get parsed/preprocessed object back
+		# Initiate request to HTMLObjectify for original url and get parsed/preprocessed object back
 
-		self.html = HTMLParser.getHTMLObject(self.rootUrl)
+		self.html = HTMLObjectify.getHTMLObject(self.rootUrl)
 
-		nodes = []
 
-		for x in range(len(self.commandChain)):
-			nodes.append(self.htmlSearch(self.html, self.processHier(self.commandChain[x][1])))
+		nodes = ScrawlyUtil.executeChain(self.commandChain)
 
 		for nodeList in nodes:
 			for node in nodeList:
-				print(node.string)
+				print(node.text)
 
 
 	def addToChain(self, func, hier):
@@ -59,31 +58,5 @@ class Scrawler:
 	def printChain(self):
 		for x in range(len(self.commandChain)):
 			print ("func: " + self.commandChain[x][0] + " | arg: " + self.commandChain[x][1])
-
-	def processHier(self, hier):
-		return hier.split('/')
-
-	def htmlSearch(self, html, hier):
-
-		path = []
-
-		for element in html.html.children:
-			if element.name == hier[0]:
-				path.append(element)
-
-
-		x = 1
-		while path != [] and x < len(hier):
-			newPath = []
-
-			for thing in path:
-				for element in thing.children:
-					if element.name == hier[x]:
-						newPath.append(element)
-
-			path = newPath
-			x = x+1
-
-		return path
 
 		
