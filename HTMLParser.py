@@ -6,12 +6,14 @@ def getHTMLObject(url):
     tree = html.fromstring(page.content)
     return tree
 
+def printPage(page):
+    for element in page.iter():
+        print("%s - %s" % (element.tag, element.text))
 
 
 def main():
     page = getHTMLObject('https://boulder.craigslist.org/')
-    print html.tostring(page)
-
+    printPage(page)
 
 
 main()
