@@ -22,7 +22,7 @@ def htmlSearch(html, hier):
 
         for item in path:
             for element in item.children:
-                if element.name = hier[x]:
+                if element.name == hier[x]:
                     newPath.append(element)
 
         path = newPath
