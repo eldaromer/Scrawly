@@ -1,8 +1,29 @@
-def executeChain(chain, html):
+import HTMLObjectify
+
+def executeChain(chain, url):
     nodes = []
+    htmls = [HTMLObjectify.getHTMLObject(url)]
+    links = [url]
 
     for command in chain:
-        nodes.append(htmlSearch(html, processHier(command[1])))
+        if command[0] == 'content':
+            for html in htmls:
+                nodes.append(htmlSearch(html, processHier(command[1])))
+        elif command[0] == 'link':
+
+            newLinks = []
+            newHtmls = []
+
+            for x in range(len(htmls)):
+                checkLinks = htmlSearch(htmls[x], processHier(command[1]))
+                for link in checkLinks:
+                    link = link.get('href')
+                    link = constructLink(links[x], link)
+                    newLinks.append(link)
+                    newHtmls.append(HTMLObjectify.getHTMLObject(link))
+
+            htmls = newHtmls
+            links = newLinks
 
     return nodes
 
