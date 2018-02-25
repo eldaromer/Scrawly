@@ -39,6 +39,13 @@ def executeChain(chain, url, html):
 
     return nodes
 
+#Takes an xPath string, a BeautifulSoup object and outputs a Scrawl path
+def xpathToScrawl(xpath, html):
+    cssSelector = cssify(xPath)
+    selected = html.select(cssSelector)
+    return traceElement(selected)
+
+
 #Split the heigherarchy command by a / character
 def processHier(hier):
     return hier.split('/')
