@@ -3,18 +3,23 @@ import HTMLObjectify
 
 #Execute the chain of scrapes known as a "Scrawl"
 #Omer just thinks that the word "chain" is hot shit 
-def executeChain(chain, url):
+def executeChain(chain, url, html):
 
-    nodes = []
-    htmls = [HTMLObjectify.getHTMLObject(url)]
+    nodes = {}
+    htmls = [html]
     links = [url]
     
     #Loop through the commands in the chain
     for command in chain:
         #Check whether the command is for scraping a link or for scraping content
         if command[0] == 'content':
+
+            results = []
+
             for html in htmls:
-                nodes.append(htmlSearch(html, processHier(command[1])))
+                results.append(htmlSearchText(html, processHier(command[1])))
+
+            nodes[command[2]] = results
         elif command[0] == 'link':
             
             #Scrape all of the links at the current heigherarchy
@@ -81,6 +86,31 @@ def getElementByClass(className, html):
     found = html.find_all(class_=className, limit=1)
     return found[0]
 
+
+def htmlSearchText(html, hier):
+    path = []
+
+    for element in html.html.children:
+        if element.name == hier[0]:
+            path.append(element)
+
+    x = 1
+    while path != [] and x < len(hier):
+        newPath = []
+
+        for item in path:
+            for element in item.children:
+                if element.name == hier[x]:
+                    newPath.append(element)
+
+        path = newPath
+        x = x+1
+
+    for x in range(len(path)):
+        path[x] = path[x].text
+
+    return path
+
 #Gets the elements in html at a specified heigerarchy
 def htmlSearch(html, hier):
     path = []
@@ -100,8 +130,5 @@ def htmlSearch(html, hier):
 
         path = newPath
         x = x+1
-
-    for element in path:
-        print(element.text)
 
     return path

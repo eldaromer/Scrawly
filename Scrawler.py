@@ -18,19 +18,24 @@ class Scrawler:
 			print ("1. Select link to scrape")
 			print ("2. Select content to scrape")
 			print ("3. Run")
-			choice = int(input("Input your decision:\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n"))
+			print ("4. Quit")
+			choice = int(input("Input your decision:\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"))
+			print ("\n")
 
 			if choice == 1:
 				hier = input ("Please input your link hierarchy\n")
-				self.addToChain("link", hier)
+				self.addToChain("link", hier, None)
 				print("\n\n")
 			elif choice == 2:
 				hier = input ("Please input your content hierarchy\n")
-				self.addToChain("content", hier)
+				variable = input("Please input what you want to name this variable\n")
+				self.addToChain("content", hier, variable)
 				print("\n\n")
 			elif choice == 3:
 				quit = True
 				self.run()
+			elif choice == 4:
+				quit = True
 			else:
 				print ("Invalid choice, try again")
 
@@ -45,15 +50,17 @@ class Scrawler:
 		self.html = HTMLObjectify.getHTMLObject(self.rootUrl)
 
 
-		nodes = ScrawlyUtil.executeChain(self.commandChain, self.rootUrl)
-
-		for nodeList in nodes:
-			for node in nodeList:
-				print(node.text)
+		nodes = ScrawlyUtil.executeChain(self.commandChain, self.rootUrl, self.html)
 
 
-	def addToChain(self, func, hier):
-		self.commandChain.append([func, hier])
+
+		for keys,values in nodes.items():
+			print(keys)
+			print(values)
+
+
+	def addToChain(self, func, hier, variable):
+		self.commandChain.append([func, hier, variable])
 
 	def printChain(self):
 		for x in range(len(self.commandChain)):
