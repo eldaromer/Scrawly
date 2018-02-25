@@ -100,4 +100,8 @@ def htmlSearch(html, hier):
 
         path = newPath
         x = x+1
+
+    for element in path:
+        print(element.text)
+
     return path
