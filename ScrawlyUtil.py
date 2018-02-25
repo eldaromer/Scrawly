@@ -1,20 +1,26 @@
 from urllib.parse import urlparse
 import HTMLObjectify
 
+#Execute the chain of scrapes known as a "Scrawl"
+#Omer just thinks that the word "chain" is hot shit 
 def executeChain(chain, url):
+
     nodes = []
     htmls = [HTMLObjectify.getHTMLObject(url)]
     links = [url]
-
+    
+    #Loop through the commands in the chain
     for command in chain:
+        #Check whether the command is for scraping a link or for scraping content
         if command[0] == 'content':
             for html in htmls:
                 nodes.append(htmlSearch(html, processHier(command[1])))
         elif command[0] == 'link':
-
+            
+            #Scrape all of the links at the current heigherarchy
             newLinks = []
             newHtmls = []
-
+            
             for x in range(len(htmls)):
                 checkLinks = htmlSearch(htmls[x], processHier(command[1]))
                 for link in checkLinks:
@@ -28,6 +34,7 @@ def executeChain(chain, url):
 
     return nodes
 
+#Split the heigherarchy command by a / character
 def processHier(hier):
     return hier.split('/')
 
@@ -35,6 +42,7 @@ def processHier(hier):
 def isAbsolute(url):
     return bool(urlparse(url).netloc)
 
+#Construct a full URL for the next jump in the crawl
 def constructLink(currentUrl, nextUrl):
     #Verify the format of the next URL
     if isAbsolute(nextUrl):
@@ -56,8 +64,24 @@ def constructLink(currentUrl, nextUrl):
             else:
                 return domain + '/' + nextUrl
 
+#Creates the heigherarchy path for a given element
+def traceElement(element):
+    currentParent = element.parent
+    elementPath = element.name
 
+    while currentParent != 'html':
+        elementPath = element.parent.name + '/'  + elementPath
+        element = element.parent
+        currentParent = element.parent.name
+    
+    return elementPath
 
+#Grab the first element by the specified class
+def getElementByClass(className, html):
+    found = html.find_all(class_=className, limit=1)
+    return found[0]
+
+#Gets the elements in html at a specified heigerarchy
 def htmlSearch(html, hier):
     path = []
 
